@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Světla</string>
+    <string name="lights_off">Světla jsou vypnuta</string>
+    <string name="lights_off_short">Vypnuto</string>
+    <string name="lights_on">Světla jsou zapnuta</string>
+    <string name="lights_on_short">Zapnuto</string>
+    <string name="lights_err">Chyba</string>
+    <string name="lights_net">Zakázáno na této síti</string>
+    <string name="lights_net_short">Zakázáno</string>
+    <string name="btn_address">Nastavit adresu zařízení</string>
+</resources>

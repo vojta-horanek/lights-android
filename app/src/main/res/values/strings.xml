@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Lights</string>
+    <string name="lights_off">Lights are off</string>
+    <string name="lights_off_short">Off</string>
+    <string name="lights_on">Lights are on</string>
+    <string name="lights_on_short">On</string>
+    <string name="lights_err">Error</string>
+    <string name="lights_net">Disabled for this network</string>
+    <string name="lights_net_short">Disabled</string>
+    <string name="btn_address">Set device address</string>
+</resources>
