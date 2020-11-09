@@ -13,14 +13,7 @@ import java.io.OutputStream;
 import static cf.vojtechh.lights.Tools.hasRoot;
 
 class Wifi {
-
-    private Context context;
-
-    public Wifi (Context context) {
-        this.context = context;
-    }
-
-    boolean check() {
+    static int check(Context context) {
         if (hasRoot()) {
             try {
                 Process process = Runtime.getRuntime().exec("su");
@@ -44,22 +37,30 @@ class Wifi {
                 process.waitFor();
                 process.destroy();
 
-                return retVal;
-
+                if (retVal) {
+                    return WifiResult.Connected;
+                } else {
+                    return WifiResult.Disconnected;
+                }
             } catch (IOException | InterruptedException ex) {
-                return false;
+                return WifiResult.Unknown;
             }
         } else {
             WifiManager wifiMgr = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
             if (wifiMgr != null && wifiMgr.isWifiEnabled()) {
                 WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
-                if(wifiInfo.getNetworkId() == -1) {
-                    return false;
+                if (wifiInfo.getNetworkId() == -1) {
+                    // We don't have location permission, lets proceed anyway
+                    return WifiResult.Unknown;
                 }
                 String SSID = wifiInfo.getSSID().replace("\"", "");
-                return SSID.equals(Constants.AllowedSSID);
-            } else return false;
+                if (SSID.equals(Constants.AllowedSSID)) {
+                    return WifiResult.Connected;
+                } else {
+                    return WifiResult.Disconnected;
+                }
+            } else return WifiResult.Disconnected;
         }
     }
 }

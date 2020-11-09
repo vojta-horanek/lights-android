@@ -13,3 +13,10 @@ abstract class Code {
     static final int State = 3;
     static final int Quit = 4;
 }
+
+abstract class WifiResult {
+    static final int Connected = 0;
+    static final int Disconnected = 1;
+    static final int Unknown = 2;
+
+}

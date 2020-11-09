@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity
     RelativeLayout content;
     ProgressBar progress;
     Integer currentState = State.Off;
-    Wifi wifi;
 
     SharedPreferences sharedPreferences;
 
@@ -40,8 +39,6 @@ public class MainActivity extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
-
-        wifi = new Wifi(this);
 
         sharedPreferences = getSharedPreferences(Constants.PreferencesName, MODE_PRIVATE);
 
@@ -126,7 +123,8 @@ public class MainActivity extends AppCompatActivity
     public void onResume() {
         super.onResume();
 
-        if (wifi.check()) {
+        int check = Wifi.check(this);
+        if (check == WifiResult.Connected) {
 
             new Connection(this, sharedPreferences.getString(Constants.AddressPreference,
                     Constants.DefaultDeviceAddress)).execute(Code.State);
@@ -135,6 +133,8 @@ public class MainActivity extends AppCompatActivity
             toggleButton.setVisibility(View.VISIBLE);
             toggleButton.setEnabled(true);
 
+        } else if (check == WifiResult.Unknown) {
+            processFinish(State.On);
         } else {
 
             progress.setVisibility(View.GONE);

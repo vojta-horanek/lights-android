@@ -26,9 +26,8 @@ public class LightsTile extends TileService implements AsyncResponse {
         super.onStartListening();
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.PreferencesName, MODE_PRIVATE);
 
-        Wifi wifi = new Wifi(this);
-
-        if (wifi.check()) {
+        int check = Wifi.check(this);
+        if (check == WifiResult.Connected || check == WifiResult.Unknown) {
             new Connection(this, sharedPreferences.getString(Constants.AddressPreference, Constants.DefaultDeviceAddress)).execute(Code.State);
         } else {
             Tile mTile = getQsTile();
@@ -42,24 +41,8 @@ public class LightsTile extends TileService implements AsyncResponse {
     }
 
     @Override
-    public void onStopListening() {
-        super.onStopListening();
-    }
-
-    @Override
-    public void onTileAdded() {
-        super.onTileAdded();
-    }
-
-    @Override
-    public void onTileRemoved() {
-        super.onTileRemoved();
-    }
-
-    @Override
     public void processFinish(Integer state) {
         Tile mTile = getQsTile();
-
         if (state == State.Off) {
             mTile.setState(Tile.STATE_INACTIVE);
             mTile.setLabel(getResources().getString(R.string.lights_off_short));
@@ -67,8 +50,13 @@ public class LightsTile extends TileService implements AsyncResponse {
             mTile.setState(Tile.STATE_ACTIVE);
             mTile.setLabel(getResources().getString(R.string.lights_on_short));
         } else if (state == State.Err) {
-            mTile.setState(Tile.STATE_UNAVAILABLE);
-            mTile.setLabel(getResources().getString(R.string.lights_err));
+            if (Wifi.check(this) == WifiResult.Unknown) {
+                mTile.setState(Tile.STATE_INACTIVE);
+                mTile.setLabel(getResources().getString(R.string.app_name));
+            } else {
+                mTile.setState(Tile.STATE_UNAVAILABLE);
+                mTile.setLabel(getResources().getString(R.string.lights_err));
+            }
         }
 
         mTile.updateTile();
